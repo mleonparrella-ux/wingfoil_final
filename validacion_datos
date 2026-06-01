@@ -1,0 +1,71 @@
+UBICACIONES   = ["Rio de la Plata", "Mar del Plata", "Potrerillos"]
+DIRECCIONES   = ["Norte", "Sur", "Este", "Oeste", "Noreste", "Noroeste", "Sudeste", "Sudoeste"]
+
+def validar_ubicacion(ubicacion):
+    """
+    Verifica que la ubicación sea válida.
+
+    Parámetros:
+        ubicacion (str): ubicación ingresada por el usuario.
+
+    Lanza:
+        ValueError: si la ubicación no está entre las opciones válidas.
+    """
+    if ubicacion not in UBICACIONES:
+        raise ValueError(f"Ubicación inválida. Opciones: {UBICACIONES}")
+
+
+def validar_direccion(direccion):
+    """
+    Verifica que la dirección del viento sea válida.
+
+    Parámetros:
+        direccion (str): dirección ingresada por el usuario.
+
+    Lanza:
+        ValueError: si la dirección no está entre las opciones válidas.
+    """
+    if direccion not in DIRECCIONES:
+        raise ValueError(f"Dirección inválida. Opciones: {DIRECCIONES}")
+
+
+def validar_viento(viento):
+    """
+    Verifica que la velocidad del viento sea un número positivo.
+
+    Parámetros:
+        viento (float): velocidad del viento en nudos.
+
+    Lanza:
+        ValueError: si el viento es negativo o cero.
+    """
+    if viento <= 0:
+        raise ValueError("La velocidad del viento debe ser mayor a 0")
+
+
+def validar_sensacion(sensacion):
+    """
+    Verifica que la sensación esté entre 1 y 10.
+
+    Parámetros:
+        sensacion (int): sensación ingresada por el usuario.
+
+    Lanza:
+        ValueError: si la sensación no está entre 1 y 10.
+    """
+    if sensacion < 1 or sensacion > 10:
+        raise ValueError("La sensación debe estar entre 1 y 10")
+
+
+def validar_duracion(duracion):
+    """
+    Verifica que la duración sea un número positivo.
+
+    Parámetros:
+        duracion (int): duración de la sesión en minutos.
+
+    Lanza:
+        ValueError: si la duración es negativa o cero.
+    """
+    if duracion <= 0:
+        raise ValueError("La duración debe ser mayor a 0")
