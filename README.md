@@ -34,3 +34,42 @@ Qué librerías y/o tecnologías usarán para el desarrollo del programa.
 
   Python
   API de clima (OpenWeatherMap) para obtener velocidad y dirección del viento automáticamente según la ubicación
+
+
+  # 2
+
+  1. Cómo define "sesiones similares":
+
+Misma ubicación
+Viento similar (±3 nudos)
+Misma dirección de viento
+
+2. Cómo calcula la recomendación:
+
+Busca las 3 sesiones más similares del historial
+Recomienda el equipo con mayor sensación promedio en esas sesiones
+
+3. Qué pasa si hay poco historial:
+
+Si hay menos de 3 sesiones similares, avisa al usuario y muestra las que hay
+Si no hay ninguna, dice que no hay suficientes datos
+
+4. Interfaz:
+
+Consola
+
+5. Gráficos:
+
+Sensación promedio por equipo
+Sesiones por mes
+Viento vs sensación
+
+6. API de clima:
+
+Si falla, permite ingresar los datos manualmente
+
+7. Validaciones:
+
+Viento numérico positivo
+Sensación entre 1 y 10
+Duración positiva
