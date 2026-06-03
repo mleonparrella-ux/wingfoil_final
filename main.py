@@ -6,7 +6,7 @@ from src.recomendacion import recomendar_equipo
 from src.graficos import (grafico_sensacion_por_wing, grafico_sensacion_por_ubicacion,
                           grafico_viento_vs_sensacion)
 
-RUTA = "sesiones_kite.xlsx"
+RUTA = "datos/dataset_sesiones.xlsx"
 
 
 def pedir_ubicacion():
