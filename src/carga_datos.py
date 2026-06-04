@@ -1,49 +1,38 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jun  4 13:39:35 2026
+
+@author: usuario
+"""
+
 import pandas as pd
-import os
 
-def cargar_datos(ruta):
-    """
-    Lee el archivo Excel de sesiones usando Pandas y devuelve un DataFrame.
+def cargar_sesiones():
+    try:
+        sesiones = pd.read_excel(
+            "datos/dataset_sesiones.xlsx",
+            sheet_name="Sesiones"
+        )
 
-    Parámetros:
-        ruta (str): ruta al archivo Excel con el historial de sesiones.
+        resumen = pd.read_excel(
+            "datos/dataset_sesiones.xlsx",
+            sheet_name="Resumen por Ubicación"
+        )
 
-    Retorna:
-        DataFrame: sesiones cargadas en un DataFrame de Pandas.
+        return sesiones, resumen
 
-    Lanza:
-        FileNotFoundError: si el archivo no existe en la ruta indicada.
-        ValueError: si el archivo está vacío o tiene campos nulos.
-    """
-    if not os.path.exists(ruta):
-        raise FileNotFoundError(f"No se encontró el archivo en la ruta: {ruta}")
+    except Exception as e:
+        print("Error al cargar datos:", e)
+        return None, None
 
-    df = pd.read_excel(ruta)
 
-    if len(df) == 0:
-        raise ValueError("El archivo está vacío")
+def unir_datos(sesiones, resumen):
 
-    if df.isna().any().any():
-        raise ValueError("El archivo contiene campos vacíos o valores nulos")
+    df = pd.merge(
+        sesiones,
+        resumen,
+        on="Ubicación",
+        how="left"
+    )
 
     return df
-
-
-def guardar_sesion(ruta, sesion):
-    """
-    Agrega una nueva sesión al archivo Excel.
-
-    Parámetros:
-        ruta (str): ruta al archivo Excel.
-        sesion (dict): diccionario con los datos de la nueva sesión.
-
-    Lanza:
-        FileNotFoundError: si el archivo no existe en la ruta indicada.
-    """
-    if not os.path.exists(ruta):
-        raise FileNotFoundError(f"No se encontró el archivo en la ruta: {ruta}")
-
-    df_existente = pd.read_excel(ruta)
-    df_nueva     = pd.DataFrame([sesion])
-    df_final     = pd.concat([df_existente, df_nueva], ignore_index=True)
-    df_final.to_excel(ruta, index=False)

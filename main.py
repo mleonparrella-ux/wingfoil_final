@@ -1,146 +1,87 @@
-from src.carga_datos import cargar_datos, guardar_sesion
-from src.validacion_datos import (validar_ubicacion, validar_direccion,
-                                   validar_viento, validar_sensacion, validar_duracion,
-                                   UBICACIONES, DIRECCIONES)
-from src.recomendacion import recomendar_equipo
-from src.graficos import (grafico_sensacion_por_wing, grafico_sensacion_por_ubicacion,
-                          grafico_viento_vs_sensacion)
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jun  4 13:39:05 2026
 
-RUTA = "datos/dataset_sesiones.xlsx"
+@author: usuario
+"""
 
+from src.carga_datos import cargar_sesiones, unir_datos
+from src.recomendador import recomendar_equipo
+from src.metricas import mostrar_estadisticas
+from graficos.graficos import grafico_wing, grafico_sesiones_por_ubicacion, grafico_viento_vs_sensacion
+from src.comparador import comparar_sesiones
 
-def pedir_ubicacion():
-    """Pide y valida la ubicación al usuario."""
-    print(f"Ubicaciones disponibles: {UBICACIONES}")
-    while True:
-        try:
-            ubicacion = input("Ingrese ubicación: ")
-            validar_ubicacion(ubicacion)
-            return ubicacion
-        except ValueError as e:
-            print(f"Error: {e}")
+sesiones, resumen = cargar_sesiones()
 
+df = unir_datos(
+    sesiones,
+    resumen
+)
 
-def pedir_direccion():
-    """Pide y valida la dirección del viento al usuario."""
-    print(f"Direcciones disponibles: {DIRECCIONES}")
-    while True:
-        try:
-            direccion = input("Ingrese dirección del viento: ")
-            validar_direccion(direccion)
-            return direccion
-        except ValueError as e:
-            print(f"Error: {e}")
+while True:
 
+    print("\n--- WINGFOIL APP ---")
 
-def pedir_viento():
-    """Pide y valida la velocidad del viento al usuario."""
-    while True:
-        try:
-            viento = float(input("Ingrese velocidad del viento (nudos): "))
-            validar_viento(viento)
-            return viento
-        except ValueError as e:
-            print(f"Error: {e}")
+    print("1. Estadísticas")
+    print("2. Recomendar equipo")
+    print("3. Comparar sesiones")
+    print("4. Gráfico Wing")
+    print("5. Viento vs Sensación")
+    print("6. Sesiones por ubicación")
+    print("0. Salir")
 
+    opcion = input("Opción: ")
 
-def registrar_sesion():
-    """
-    Solicita los datos de una nueva sesión y la guarda en el Excel.
-    """
-    print("\n=== Registrar nueva sesión ===")
-    fecha     = input("Ingrese la fecha (YYYY-MM-DD): ")
-    ubicacion = pedir_ubicacion()
-    while True:
-        try:
-            duracion = int(input("Ingrese duración en minutos: "))
-            validar_duracion(duracion)
-            break
-        except ValueError as e:
-            print(f"Error: {e}")
-    viento    = pedir_viento()
-    direccion = pedir_direccion()
-    wing      = input("Ingrese wing (ej: 5m): ")
-    tabla     = input("Ingrese tabla (ej: 85L): ")
-    foil      = input("Ingrese foil (ej: 633): ")
-    while True:
-        try:
-            sensacion = int(input("Ingrese sensación (1-10): "))
-            validar_sensacion(sensacion)
-            break
-        except ValueError as e:
-            print(f"Error: {e}")
+    if opcion == "1":
 
-    sesion = {
-        "fecha":         fecha,
-        "ubicacion":     ubicacion,
-        "duracion_min":  duracion,
-        "vel_viento_kn": viento,
-        "dir_viento":    direccion,
-        "wing":          wing,
-        "tabla":         tabla,
-        "foil":          foil,
-        "sensacion":     sensacion
-    }
-    guardar_sesion(RUTA, sesion)
-    print("Sesión registrada correctamente.")
+        mostrar_estadisticas(df)
 
+    elif opcion == "2":
 
-def obtener_recomendacion(df):
-    """
-    Pide las condiciones del día y muestra la recomendación de equipo.
+        ubicacion = input("Ubicación: ")
 
-    Parámetros:
-        df (DataFrame): historial completo de sesiones.
-    """
-    print("\n=== Recomendación de equipo ===")
-    ubicacion = pedir_ubicacion()
-    direccion = pedir_direccion()
-    viento    = pedir_viento()
-    recomendar_equipo(df, ubicacion, direccion, viento)
+        viento = float(
+            input("Viento: ")
+        )
 
+        direccion = input(
+            "Dirección: "
+        )
 
-def ver_graficos(df):
-    """
-    Genera y guarda los tres gráficos del historial.
+        recomendar_equipo(
+            df,
+            ubicacion,
+            viento,
+            direccion
+        )
 
-    Parámetros:
-        df (DataFrame): historial completo de sesiones.
-    """
-    print("\n=== Generando gráficos ===")
-    grafico_sensacion_por_wing(df)
-    grafico_sensacion_por_ubicacion(df)
-    grafico_viento_vs_sensacion(df)
-    print("Gráficos generados en la carpeta graficos/")
+    elif opcion == "3":
 
+        id1 = int(input("ID sesión 1: "))
+        id2 = int(input("ID sesión 2: "))
 
-# Programa principal
-try:
-    df = cargar_datos(RUTA)
-except (FileNotFoundError, ValueError) as e:
-    print(f"Error al cargar datos: {e}")
-    df = None
+        comparar_sesiones(
+            df,
+            id1,
+            id2
+        )
 
-if df is not None:
-    while True:
-        print("\n=== WingfoilTracker ===")
-        print("1. Registrar nueva sesión")
-        print("2. Obtener recomendación de equipo")
-        print("3. Ver estadísticas y gráficos")
-        print("4. Salir")
+    elif opcion == "4":
 
-        opcion = input("Ingrese una opción: ")
+        grafico_wing(df)
 
-        if opcion == "1":
-            registrar_sesion()
-            df = cargar_datos(RUTA)
-        elif opcion == "2":
-            obtener_recomendacion(df)
-        elif opcion == "3":
-            ver_graficos(df)
-        elif opcion == "4":
-            print("Programa finalizado.")
-            break
-        else:
-            print("Opción inválida. Ingrese 1, 2, 3 o 4.")
+    elif opcion == "5":
 
+        grafico_viento_vs_sensacion(df)
+
+    elif opcion == "6":
+
+        grafico_sesiones_por_ubicacion(df)
+
+    elif opcion == "0":
+
+        break
+
+    else:
+
+        print("Opción inválida")
