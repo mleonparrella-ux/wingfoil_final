@@ -7,26 +7,7 @@ Created on Thu Jun  4 13:41:10 2026
 
 import matplotlib.pyplot as plt
 
-
-def grafico_wing(df):
-
-    datos = (
-        df.groupby("Wing")["Sensación"]
-        .mean()
-    )
-
-    datos.plot(kind="bar")
-
-    plt.title(
-        "Sensación promedio por Wing"
-    )
-
-    plt.ylabel("Sensación")
-
-    plt.show()
-
-
-def grafico_viento_vs_sensacion(df):
+def grafico_viento(df):
 
     plt.scatter(
         df["Vel. Viento (kn)"],
@@ -34,29 +15,22 @@ def grafico_viento_vs_sensacion(df):
     )
 
     plt.xlabel("Viento")
-
     plt.ylabel("Sensación")
 
-    plt.title(
-        "Viento vs Sensación"
-    )
+    plt.title("Viento vs Sensación")
 
     plt.show()
 
 
-def grafico_sesiones_por_ubicacion(df):
+def grafico_wings(df):
 
-    datos = (
-        df["Ubicación"]
-        .value_counts()
+    datos = df["Wing"].value_counts()
+
+    plt.bar(
+        datos.index,
+        datos.values
     )
 
-    datos.plot(kind="bar")
-
-    plt.title(
-        "Sesiones por ubicación"
-    )
-
-    plt.ylabel("Cantidad")
+    plt.title("Uso de Wings")
 
     plt.show()

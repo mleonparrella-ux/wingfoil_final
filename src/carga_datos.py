@@ -7,32 +7,13 @@ Created on Thu Jun  4 13:39:35 2026
 
 import pandas as pd
 
-def cargar_sesiones():
+def cargar_datos():
+
     try:
-        sesiones = pd.read_excel(
-            "datos/dataset_sesiones.xlsx",
-            sheet_name="Sesiones"
-        )
-
-        resumen = pd.read_excel(
-            "datos/dataset_sesiones.xlsx",
-            sheet_name="Resumen por Ubicación"
-        )
-
-        return sesiones, resumen
+        df = pd.read_excel("datos/dataset_sesiones.xlsx")
+        return df
 
     except Exception as e:
-        print("Error al cargar datos:", e)
-        return None, None
-
-
-def unir_datos(sesiones, resumen):
-
-    df = pd.merge(
-        sesiones,
-        resumen,
-        on="Ubicación",
-        how="left"
-    )
-
-    return df
+        print("Error al cargar el archivo")
+        print(e)
+        return None

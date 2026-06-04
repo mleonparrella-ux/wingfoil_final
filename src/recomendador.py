@@ -5,49 +5,29 @@ Created on Thu Jun  4 13:40:20 2026
 @author: usuario
 """
 
-def buscar_similares(df, ubicacion, viento, direccion):
+def sesiones_similares(df, viento):
 
     similares = df[
-        (df["Ubicación"] == ubicacion)
-        &
-        (abs(df["Vel. Viento (kn)"] - viento) <= 3)
-        &
-        (df["Dir. Viento"] == direccion)
+        abs(df["Vel. Viento (kn)"] - viento) <= 3
     ]
 
     return similares
 
 
-def recomendar_equipo(df, ubicacion, viento, direccion):
+def recomendar_wing(df, viento):
 
-    similares = buscar_similares(
-        df,
-        ubicacion,
-        viento,
-        direccion
-    )
+    similares = sesiones_similares(df, viento)
 
     if len(similares) == 0:
-
-        print("No hay sesiones similares.")
+        print("No hay sesiones similares")
         return
 
-    top3 = similares.nlargest(
-        3,
-        "Sensación"
-    )
+    wing = similares["Wing"].mode()[0]
 
-    wing = top3["Wing"].mode()[0]
-    tabla = top3["Tabla"].mode()[0]
-    foil = top3["Foil"].mode()[0]
-
-    print("\nEquipo recomendado")
-
-    print("Wing:", wing)
-    print("Tabla:", tabla)
-    print("Foil:", foil)
+    print("\nWing recomendado:")
+    print(wing)
 
     print(
         "Sensación promedio:",
-        round(top3["Sensación"].mean(), 2)
+        round(similares["Sensación"].mean(),2)
     )
