@@ -1,19 +1,20 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jun  4 13:39:35 2026
-
-@author: usuario
-"""
 
 import pandas as pd
 
 def cargar_datos():
+    """
+    Lee el archivo Excel de sesiones y devuelve un DataFrame.
 
+    Retorna:
+        DataFrame: sesiones cargadas en un DataFrame de Pandas.
+        None: si el archivo no existe.
+
+    Lanza:
+        FileNotFoundError: si el archivo no existe en la ruta indicada.
+    """
     try:
         df = pd.read_excel("datos/dataset_sesiones.xlsx")
         return df
-
-    except Exception as e:
-        print("Error al cargar el archivo")
-        print(e)
+    except FileNotFoundError:
+        print("Error: no se encontró el archivo datos/dataset_sesiones.xlsx")
         return None
