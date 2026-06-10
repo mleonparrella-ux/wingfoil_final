@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jun  4 13:07:14 2026
 
-@author: usuario
-"""
 
 from src.carga_datos import cargar_datos
 from graficos.graficos import grafico_wings
